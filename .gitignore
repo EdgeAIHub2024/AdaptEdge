@@ -1,0 +1,46 @@
+# Python编译文件
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 虚拟环境
+adaptedge-env/
+venv/
+env/
+.env/
+.venv/
+
+# 发布相关
+dist/
+build/
+*.egg-info/
+
+# IDE配置
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志文件
+*.log
+logs/
+
+# 临时文件
+tmp/
+temp/
+*.tmp
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# 测试覆盖率报告
+.coverage
+htmlcov/
+coverage.xml
+
+# 项目特定忽略
+# 添加与项目相关的特定忽略项 

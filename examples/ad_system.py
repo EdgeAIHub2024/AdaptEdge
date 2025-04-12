@@ -1,12 +1,10 @@
 from adaptedge.core import AdaptEdge
-from adaptedge.modules import AdInput, AdTransformation, AdOutput, AdFeedback
+from adaptedge.ad_system import AdSystemInput, AdSystemTransformation, AdSystemOutput, AdSystemFeedback
 
-# 初始化模块
-input_mod = AdInput()
-trans_mod = AdTransformation(rules_file="rules.json")
-output_mod = AdOutput()
-feedback_mod = AdFeedback(threshold=5.0)
+input_mod = AdSystemInput(use_camera=False)
+trans_mod = AdSystemTransformation()
+output_mod = AdSystemOutput()
+feedback_mod = AdSystemFeedback()
 
-# 创建并运行 AdaptEdge 系统
 system = AdaptEdge(input_mod, trans_mod, output_mod, feedback_mod)
 system.run(interval=2.0)

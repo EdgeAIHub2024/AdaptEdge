@@ -17,7 +17,7 @@ AdaptEdge 是我的一个实验项目，目标是在资源受限的嵌入式设�
 
 ### 前置条件
 
-- Python 3.6 或更高版本
+- Python 3.8 或更高版本
 - 支持的硬件：测试于 Jetson Nano（其他平台待适配）
 
 ### 步骤
@@ -31,7 +31,7 @@ AdaptEdge 是我的一个实验项目，目标是在资源受限的嵌入式设�
 2. 创建并激活虚拟环境：
    ```
    # 使用Conda创建Python 3.6环境
-   conda create -n adaptedge-env python=3.6
+   conda create -n adaptedge-env python=3.8
 
    # 激活Conda环境
    conda activate adaptedge-env
@@ -39,34 +39,55 @@ AdaptEdge 是我的一个实验项目，目标是在资源受限的嵌入式设�
 
 3. 安装项目（开发模式）：
    ```
-   # 开发模式安装
    pip install -e .
    ```
-
-4. 运行示例：
+   若使用摄像头，安装 OpenCV：
    ```
-   # 运行广告系统示例
+   pip install opencv-python
+   ```
+## 快速开始
+AdaptEdge 提供两个示例：智能广告系统和智能试衣间。
+
+   运行广告系统示例
+   ```
    python examples/ad_system.py
    ```
 
-   运行后，你会看到类似输出：
+   输出示例：
    ```
-   AdaptEdge 系统启动...
-   推荐广告: 运动鞋广告 (ID: A001)
-   用户停留时间: 6.73 秒
-   规则 '20-30_male_happy' 权重增加到 1.10
+   输入数据: 年龄=20-30, 性别=男, 情绪=开心
+   转换结果: 匹配规则 '20-30_男_开心'
+   输出推荐: 运动鞋广告 (ID: A001)
+   反馈更新: 用户停留时间 6.73 秒，规则 '20-30_男_开心' 权重增加到 1.10
    ```
+   运行智能试衣间示例
+   ```
+   python examples/clothing_system.py
+   ```
+   输出示例：
+   ```
+   输入数据: 肤色=浅色, 体型=苗条
+   转换结果: 匹配规则 '浅色_苗条'
+   输出推荐: 粉色修身上衣 (ID: C001)
+   反馈更新: 用户评分 4 分，规则 '浅色_苗条' 权重增加到 1.10
+   ```
+
 ## 使用方法
 
-AdaptEdge 的核心是一个循环系统，你可以自定义模块来适配自己的场景：
+AdaptEdge 的核心是一个循环系统，开发者可自定义模块适配不同场景。
 
-### 示例代码
+### 示例代码（广告系统）
 ```
-from adaptedge.core import AdaptEdge
-from adaptedge.modules import AdInput, AdTransformation, AdOutput, AdFeedback
+from adaptedge.core | AdaptEdge
+from adaptedge.ad_system import AdSystemInput, AdSystemTransformation, AdSystemOutput, AdSystemFeedback
 
-system = AdaptEdge(AdInput(), AdTransformation(), AdOutput(), AdFeedback())
-system.run(interval=2.0)
+input_mod = AdSystemInput(use_camera=False)  # 用户特征输入（支持 USB 摄像头）
+trans_mod = AdSystemTransformation()       # 规则匹配
+output_mod = AdSystemOutput()              # 输出推荐
+feedback_mod = AdSystemFeedback()          # 权重调整
+
+system = AdaptEdge(input_mod, trans_mod, output_mod, feedback_mod)
+system.run(interval=2.0)  # 每 2 秒循环
 ```
 
 ### 自定义模块
@@ -80,45 +101,61 @@ system.run(interval=2.0)
 详情见 adaptedge/core.py。
 
 ## 项目结构
+   ```
+   AdaptEdge/
+   ├── adaptedge/
+   │   ├── __init__.py
+   │   ├── core.py              # 核心框架
+   │   ├── ad_system.py         # 广告系统模块
+   │   ├── clothing_system.py   # 试衣间模块
+   ├── configs/
+   │   ├── ad_system_rules.json      # 广告规则
+   │   ├── clothing_system_rules.json  # 试衣间规则
+   ├── examples/
+   │   ├── ad_system.py         # 广告示例
+   │   ├── clothing_system.py   # 试衣间示例
+   └── README.md
+   ```
 
-AdaptEdge/
+## 配置说明
+规则文件位于 configs/，使用中文键值，便于本地化：
+ad_system_rules.json：定义年龄、性别、情绪到广告的映射，如 "20-30_男_开心"。
 
-├── adaptedge/        # 核心代码
+clothing_system_rules.json：定义肤色、体型到服装的映射，如 "浅色_苗条"。
 
-│   ├── core.py       # 框架主类和抽象基类
-
-│   └── modules.py    # 示例模块实现
-
-├── examples/         # 示例应用
-
-│   └── ad_system.py  # 智能广告系统
-
-├── rules.json        # 示例规则文件
-
-└── README.md         # 本文档
+开发者可创建新规则文件，建议命名为 <use_case>_rules.json。
+示例规则
+configs/ad_system_rules.json：
+```
+{
+   "20-30_男_开心": {"ad_id": "A001", "description": "运动鞋广告"},
+   "30-40_女_难过": {"ad_id": "A002", "description": "甜品广告"},
+   "default": {"ad_id": "A000", "description": "默认广告"}
+}
+```
 
 ## 当前功能与局限
 
 ### 已实现
 
-- 基于规则的推荐（JSON 文件驱动）。
-- 简单反馈机制（根据模拟数据调整权重）。
-- 在 Jetson Nano 上运行稳定。
+- 智能广告系统：基于中文规则推荐广告，支持模拟和摄像头输入。
+- 智能试衣间：基于肤色、体型推荐服装，使用简单 HSV 检测。
+- 模块化设计：在 Jetson Nano 上运行稳定。
  
 ### 局限性
 
-- 输入仅支持模拟数据，暂无真实传感器支持。
-- 未集成 AI 模型，仅限规则驱动。
-- 功能初步，实验性强。
+- 输入：摄像头仅支持 USB，特征提取为模拟或简单算法。
+- 规则：仅支持静态 JSON，暂无 AI 模型。
+- 硬件：仅测试 Jetson Nano，需适配 Raspberry Pi 等。
 
 ## 未来计划
 
-- 添加摄像头支持（OpenCV 集成）。
-- 尝试加载轻量 AI 模型（如 TensorFlow Lite）。
-- 优化反馈机制，支持数据持久化。
-- 适配更多硬件（如 Raspberry Pi）。
+- 增强输入：支持 CSI 摄像头和传感器。
+- 集成 AI：加载 TensorFlow Lite 模型。
+- 优化反馈：实现数据持久化和在线学习。
+- 扩展硬件：适配 Raspberry Pi、ESP32。
 
-注：这些计划会根据开发进度和社区反馈逐步推进。
+注：计划根据社区反馈调整，欢迎提出建议！
 
 ## 适用场景（设想）
 

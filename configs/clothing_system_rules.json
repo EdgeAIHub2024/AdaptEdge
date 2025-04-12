@@ -1,0 +1,6 @@
+{
+    "浅色_苗条": {"clothing_id": "C001", "description": "粉色修身上衣"},
+    "深色_中等": {"clothing_id": "C002", "description": "黑色宽松外套"},
+    "浅色_偏重": {"clothing_id": "C003", "description": "蓝色长裙"},
+    "default": {"clothing_id": "C000", "description": "默认服装"}
+}

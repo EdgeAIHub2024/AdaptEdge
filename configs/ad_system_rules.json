@@ -1,0 +1,6 @@
+{
+    "20-30_男_开心": {"ad_id": "A001", "description": "运动鞋广告"},
+    "30-40_女_难过": {"ad_id": "A002", "description": "甜品广告"},
+    "40-50_男_平静": {"ad_id": "A003", "description": "汽车广告"},
+    "default": {"ad_id": "A000", "description": "默认广告"}
+}

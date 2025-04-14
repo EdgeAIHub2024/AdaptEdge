@@ -1,9 +1,4 @@
-import json
 import random
-import os
-
-# 获取项目根目录
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class AdSystemInput:
     def __init__(self, use_camera=False, camera_index=0):
@@ -20,16 +15,25 @@ class AdSystemInput:
 
     def collect_data(self):
         if self.use_camera and self.cap:
+            import cv2
             ret, frame = self.cap.read()
             if not ret:
                 print("读取摄像头失败，使用默认特征")
-                return {"age": "未知", "gender": "未知", "emotion": "未知"}
+                return {
+                    "age": "20-30",
+                    "gender": "男",
+                    "emotion": "开心"
+                }
+            age = "20-30"
+            gender = "男"
+            emotion = "开心"
             data = {
-                "age": random.choice(["20-30", "30-40", "40-50"]),
-                "gender": random.choice(["男", "女"]),
-                "emotion": random.choice(["开心", "难过", "平静"])
+                "age": age,
+                "gender": gender,
+                "emotion": emotion
             }
         else:
+            import random
             data = {
                 "age": random.choice(["20-30", "30-40", "40-50"]),
                 "gender": random.choice(["男", "女"]),
@@ -43,20 +47,13 @@ class AdSystemInput:
             self.cap.release()
             print("摄像头已释放")
 
-class AdSystemTransformation:
-    def __init__(self, rules_file=os.path.join(BASE_DIR, "configs", "ad_system_rules.json")):
-        with open(rules_file, "r", encoding="utf-8") as f:
-            self.rules = json.load(f)
-
-    def process(self, data):
-        key = f"{data['age']}_{data['gender']}_{data['emotion']}"
-        result = self.rules.get(key, self.rules["default"])
-        print(f"转换结果: 匹配规则 '{key}'")
-        return result
-
 class AdSystemOutput:
     def present(self, result):
-        print(f"输出推荐: {result['description']} (ID: {result['ad_id']})")
+        product_type = result.get("product_type", "默认产品")
+        style = result.get("style", "默认风格")
+        content = result.get("content", "默认广告")
+        recommendation = f"{product_type} {style} {content}"
+        print(f"输出推荐: {recommendation}")
         stay_time = random.uniform(0, 10)
         return {"stay_time": stay_time}
 
@@ -66,11 +63,11 @@ class AdSystemFeedback:
         self.weights = {}
 
     def update(self, data, result, feedback):
-        key = f"{data['age']}_{data['gender']}_{data['emotion']}"
+        rule_key = f"{data.get('age', 'default')}_{data.get('gender', 'default')}_{data.get('emotion', 'default')}"
         stay_time = feedback["stay_time"]
+        self.weights[rule_key] = self.weights.get(rule_key, 1.0)
         if stay_time > self.threshold:
-            self.weights[key] = self.weights.get(key, 1.0) + 0.1
-            print(f"反馈更新: 用户停留时间 {stay_time:.2f} 秒，规则 '{key}' 权重增加到 {self.weights[key]:.2f}")
+            self.weights[rule_key] += 0.1
         else:
-            self.weights[key] = max(self.weights.get(key, 1.0) - 0.05, 0.1)
-            print(f"反馈更新: 用户停留时间 {stay_time:.2f} 秒，规则 '{key}' 权重减少到 {self.weights[key]:.2f}")
+            self.weights[rule_key] -= 0.05
+        print(f"反馈更新: 用户停留时间 {stay_time:.2f} 秒，规则 '{rule_key}' 权重调整到 {self.weights[rule_key]:.2f}")

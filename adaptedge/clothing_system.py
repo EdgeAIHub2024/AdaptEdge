@@ -1,10 +1,4 @@
-import json
 import random
-import numpy as np
-import os
-
-# 获取项目根目录
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 class ClothingSystemInput:
     def __init__(self, use_camera=False, camera_index=0):
@@ -25,16 +19,22 @@ class ClothingSystemInput:
             ret, frame = self.cap.read()
             if not ret:
                 print("读取摄像头失败，使用默认特征")
-                return {"skin_tone": "未知", "body_shape": "未知"}
-            hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-            avg_hsv = np.mean(hsv, axis=(0, 1))
-            skin_tone = "浅色" if avg_hsv[2] > 150 else "深色"
-            body_shape = random.choice(["苗条", "中等", "偏重"])
-            data = {"skin_tone": skin_tone, "body_shape": body_shape}
+                return {
+                    "skin_tone": "浅色",
+                    "body_shape": "苗条"
+                }
+            # 简化，实际需模型
+            skin_tone = "浅色"
+            body_shape = "苗条"
+            data = {
+                "skin_tone": skin_tone,
+                "body_shape": body_shape
+            }
         else:
+            import random
             data = {
                 "skin_tone": random.choice(["浅色", "深色"]),
-                "body_shape": random.choice(["苗条", "中等", "偏重"])
+                "body_shape": random.choice(["苗条", "中等"])
             }
         print(f"输入数据: 肤色={data['skin_tone']}, 体型={data['body_shape']}")
         return data
@@ -44,34 +44,27 @@ class ClothingSystemInput:
             self.cap.release()
             print("摄像头已释放")
 
-class ClothingSystemTransformation:
-    def __init__(self, rules_file=os.path.join(BASE_DIR, "configs", "clothing_system_rules.json")):
-        with open(rules_file, "r", encoding="utf-8") as f:
-            self.rules = json.load(f)
-
-    def process(self, data):
-        key = f"{data['skin_tone']}_{data['body_shape']}"
-        result = self.rules.get(key, self.rules["default"])
-        print(f"转换结果: 匹配规则 '{key}'")
-        return result
-
 class ClothingSystemOutput:
     def present(self, result):
-        print(f"输出推荐: {result['description']} (ID: {result['clothing_id']})")
-        user_score = random.randint(1, 5)
-        return {"user_score": user_score}
+        # 适配多规则输出
+        color = result.get("color", "白色")
+        fit = result.get("fit", "默认款")
+        recommendation = f"{color} {fit}上衣"
+        print(f"输出推荐: {recommendation}")
+        rating = random.randint(1, 5)
+        return {"rating": rating}
 
 class ClothingSystemFeedback:
-    def __init__(self, score_threshold=3):
-        self.threshold = score_threshold
+    def __init__(self, threshold=3):
+        self.threshold = threshold
         self.weights = {}
 
     def update(self, data, result, feedback):
-        key = f"{data['skin_tone']}_{data['body_shape']}"
-        user_score = feedback["user_score"]
-        if user_score >= self.threshold:
-            self.weights[key] = self.weights.get(key, 1.0) + 0.1
-            print(f"反馈更新: 用户评分 {user_score} 分，规则 '{key}' 权重增加到 {self.weights[key]:.2f}")
+        rule_key = f"{data.get('skin_tone', 'default')}_{data.get('body_shape', 'default')}"
+        rating = feedback["rating"]
+        self.weights[rule_key] = self.weights.get(rule_key, 1.0)
+        if rating > self.threshold:
+            self.weights[rule_key] += 0.1
         else:
-            self.weights[key] = max(self.weights.get(key, 1.0) - 0.05, 0.1)
-            print(f"反馈更新: 用户评分 {user_score} 分，规则 '{key}' 权重减少到 {self.weights[key]:.2f}")
+            self.weights[rule_key] -= 0.05
+        print(f"反馈更新: 用户评分 {rating} 分，规则 '{rule_key}' 权重调整到 {self.weights[rule_key]:.2f}")

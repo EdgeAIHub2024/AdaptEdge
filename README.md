@@ -30,7 +30,7 @@ AdaptEdge 是我的一个实验项目，目标是在资源受限的嵌入式设�
 
 2. 创建并激活虚拟环境：
    ```
-   # 使用Conda创建Python 3.6环境
+   # 使用Conda创建Python 3.8环境
    conda create -n adaptedge-env python=3.8
 
    # 激活Conda环境

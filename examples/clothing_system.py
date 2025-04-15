@@ -1,7 +1,8 @@
 from adaptedge.core import AdaptEdge
-from adaptedge.file_input import FileInput
-from adaptedge.clothing_system import ClothingSystemInput, ClothingSystemOutput, ClothingSystemFeedback
-from adaptedge.transformation_rules import SkinToneTransformation, BodyShapeTransformation
+from adaptedge.inputs.file_input import FileInput
+from adaptedge.inputs.clothing_system_input import ClothingSystemInput
+from adaptedge.rules.clothing_system_rules import SkinToneTransformation, BodyShapeTransformation
+from adaptedge.clothing_system import ClothingSystemOutput, ClothingSystemFeedback
 
 input_mods = [FileInput("data.txt"), ClothingSystemInput(use_camera=False)]
 trans_mods = [SkinToneTransformation(), BodyShapeTransformation()]

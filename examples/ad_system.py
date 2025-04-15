@@ -1,7 +1,8 @@
 from adaptedge.core import AdaptEdge
-from adaptedge.file_input import FileInput
-from adaptedge.ad_system import AdSystemInput, AdSystemOutput, AdSystemFeedback
-from adaptedge.transformation_rules import AgeTransformation, GenderTransformation, EmotionTransformation
+from adaptedge.inputs.file_input import FileInput
+from adaptedge.inputs.ad_system_input import AdSystemInput
+from adaptedge.rules.ad_system_rules import AgeTransformation, GenderTransformation, EmotionTransformation
+from adaptedge.ad_system import AdSystemOutput, AdSystemFeedback
 
 input_mods = [FileInput("data.txt"), AdSystemInput(use_camera=False)]
 trans_mods = [AgeTransformation(), GenderTransformation(), EmotionTransformation()]

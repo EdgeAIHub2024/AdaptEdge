@@ -1,6 +1,12 @@
 {
-    "浅色_苗条": {"clothing_id": "C001", "description": "粉色修身上衣"},
-    "深色_中等": {"clothing_id": "C002", "description": "黑色宽松外套"},
-    "浅色_偏重": {"clothing_id": "C003", "description": "蓝色长裙"},
-    "default": {"clothing_id": "C000", "description": "默认服装"}
+    "skintonetransformation": {
+        "浅色": {"color": "粉色"},
+        "深色": {"color": "深蓝"},
+        "default": {"color": "白色"}
+    },
+    "bodyshapetransformation": {
+        "苗条": {"fit": "修身款"},
+        "中等": {"fit": "宽松款"},
+        "default": {"fit": "默认款"}
+    }
 }

@@ -1,6 +1,19 @@
 {
-    "20-30_男_开心": {"ad_id": "A001", "description": "运动鞋广告"},
-    "30-40_女_难过": {"ad_id": "A002", "description": "甜品广告"},
-    "40-50_男_平静": {"ad_id": "A003", "description": "汽车广告"},
-    "default": {"ad_id": "A000", "description": "默认广告"}
+    "agetransformation": {
+        "20-30": {"product_type": "时尚产品"},
+        "30-40": {"product_type": "实用产品"},
+        "40-50": {"product_type": "高端产品"},
+        "default": {"product_type": "默认产品"}
+    },
+    "gendertransformation": {
+        "男": {"style": "运动风格"},
+        "女": {"style": "优雅风格"},
+        "default": {"style": "默认风格"}
+    },
+    "emotiontransformation": {
+        "开心": {"content": "正能量广告"},
+        "难过": {"content": "治愈广告"},
+        "平静": {"content": "常规广告"},
+        "default": {"content": "默认广告"}
+    }
 }

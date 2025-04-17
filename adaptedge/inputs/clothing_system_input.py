@@ -1,3 +1,5 @@
+from adaptedge.registry import input_registry
+
 class ClothingSystemInput:
     def __init__(self, use_camera=False, camera_index=0):
         self.use_camera = use_camera
@@ -40,3 +42,5 @@ class ClothingSystemInput:
         if self.use_camera and self.cap and self.cap.isOpened():
             self.cap.release()
             print("摄像头已释放")
+
+input_registry.register("clothing_system_input", ClothingSystemInput)

@@ -1,0 +1,10 @@
+{
+    "input_modules": [
+        {"name": "file_input", "args": {"filepath": "data.txt"}},
+        {"name": "clothing_system_input", "args": {"use_camera": false}}
+    ],
+    "transformation_modules": [
+        {"name": "clothing_system.skintone"},
+        {"name": "clothing_system.bodyshape"}
+    ]
+}

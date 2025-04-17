@@ -5,6 +5,18 @@ class AdaptEdge:
         self.output_module = output_module
         self.feedback_module = feedback_module
 
+    def load_config(self, config_file):
+        import json
+        from adaptedge.registry import input_registry, rule_registry
+        with open(config_file, "r") as f:
+            config = json.load(f)
+        self.input_modules = []
+        for mod in config["input_modules"]:
+            self.input_modules.append(input_registry.get(mod["name"], **mod.get("args", {})))
+        self.transformation_modules = []
+        for mod in config["transformation_modules"]:
+            self.transformation_modules.append(rule_registry.get(mod["name"], **mod.get("args", {})))
+
     def run(self, interval=1.0):
         import time
         while True:

@@ -1,4 +1,5 @@
 from adaptedge.rules.base_rule import BaseRuleTransformation
+from adaptedge.registry import rule_registry
 
 class SkinToneTransformation(BaseRuleTransformation):
     def __init__(self, rules_file=None):
@@ -13,3 +14,6 @@ class BodyShapeTransformation(BaseRuleTransformation):
 
     def extract_key(self, data):
         return data.get("body_shape", "default")
+
+rule_registry.register("clothing_system.skintone", SkinToneTransformation)
+rule_registry.register("clothing_system.bodyshape", BodyShapeTransformation)

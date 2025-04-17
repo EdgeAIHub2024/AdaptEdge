@@ -1,0 +1,11 @@
+{
+    "input_modules": [
+        {"name": "file_input", "args": {"filepath": "data.txt"}},
+        {"name": "ad_system_input", "args": {"use_camera": false}}
+    ],
+    "transformation_modules": [
+        {"name": "ad_system.age"},
+        {"name": "ad_system.gender"},
+        {"name": "ad_system.emotion"}
+    ]
+}

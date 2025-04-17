@@ -1,4 +1,5 @@
 from adaptedge.rules.base_rule import BaseRuleTransformation
+from adaptedge.registry import rule_registry
 
 class AgeTransformation(BaseRuleTransformation):
     def __init__(self, rules_file=None):
@@ -20,3 +21,7 @@ class EmotionTransformation(BaseRuleTransformation):
 
     def extract_key(self, data):
         return data.get("emotion", "default")
+
+rule_registry.register("ad_system.age", AgeTransformation)
+rule_registry.register("ad_system.gender", GenderTransformation)
+rule_registry.register("ad_system.emotion", EmotionTransformation)

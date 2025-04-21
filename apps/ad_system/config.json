@@ -7,6 +7,8 @@
         {"name": "ad_system.age"},
         {"name": "ad_system.gender"},
         {"name": "ad_system.emotion"},
-        {"name": "ad_system.ml"}
-    ]
+        {"name": "ad_system.composite"}
+    ],
+    "output_module": {"name": "ad_system_output"},
+    "feedback_module": {"name": "ad_system_feedback"}
 }

@@ -6,5 +6,7 @@
     "transformation_modules": [
         {"name": "clothing_system.skintone"},
         {"name": "clothing_system.bodyshape"}
-    ]
+    ],
+    "output_module": {"name": "clothing_system_output"},
+    "feedback_module": {"name": "clothing_system_feedback"}
 }

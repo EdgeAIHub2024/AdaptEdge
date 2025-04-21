@@ -13,3 +13,5 @@ class ModuleRegistry:
 
 input_registry = ModuleRegistry()
 rule_registry = ModuleRegistry()
+output_registry = ModuleRegistry()
+feedback_registry = ModuleRegistry()

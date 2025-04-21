@@ -1,0 +1,10 @@
+{
+    "input_modules": [
+        {"name": "{{system}}_input", "args": {}}
+    ],
+    "transformation_modules": [
+        {"name": "{{system}}.rule", "args": {}}
+    ],
+    "output_module": {"name": "{{system}}_output", "args": {}},
+    "feedback_module": {"name": "{{system}}_feedback", "args": {}}
+}
